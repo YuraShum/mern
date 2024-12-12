@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
+import { IUser } from "../interfaces";
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -21,6 +22,7 @@ const userSchema = new mongoose.Schema({
     },
 })
 
-const userModel = mongoose.model("User", userSchema)
+//!! перевірити чи правильно створений інтерфейс для моделі
+const userModel: Model<IUser> = mongoose.model<IUser>("User", userSchema);
 
 export { userModel }
