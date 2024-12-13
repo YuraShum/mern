@@ -13,19 +13,24 @@ export class UserRepository implements IUserRepository {
     }
 
     async updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null> {
-        const updateUser = await userModel.findByIdAndUpdate(
-            userId,
-            userData,
-            {
+        const updateUser = await userModel
+            .findByIdAndUpdate({ _id: userId }, userData, {
                 new: true,
                 lean: true,
-            }
-        )
+            })
+            .exec();
         return updateUser as IUser | null;
     }
 
     async deleteUser(userId: string): Promise<void> {
-        await userModel.findByIdAndDelete(userId)
+        await userModel.findByIdAndDelete({ _id: userId }).exec();
+    }
+
+    async checkDuplicateUser(username: string): Promise<IUser | null> {
+        return userModel.findOne({ username }).exec();
+    }
+    async findUserById(userId: string): Promise<IUser | null> {
+        return userModel.findById({ _id: userId }).exec();
     }
 
 }
