@@ -15,14 +15,15 @@ import { LOGGER_MONOGO_ERROR_FILE_NAME } from "./constants"
 const app: Application = express()
 
 const { port } = config
+// Підяключення до бази даних
+connectDB()
 
 app.use(express.json())
 
 //!! Перевірити працездатність обмежень корсу
 app.use(cors(corsOptions))
 app.use(cookieParser())
-// Підяключення до бази даних
-connectDB()
+
 app.use(logger)
 
 app.use('/', express.static(path.join(__dirname, '../public')))
