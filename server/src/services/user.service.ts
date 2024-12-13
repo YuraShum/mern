@@ -23,6 +23,14 @@ export class UserService implements IUserService {
     async deleteUser(userId: string): Promise<void> {
         return this.userRepository.deleteUser(userId)
     }
+
+    async checkDuplicateUser(username: string): Promise<IUser | null>{
+        return this.userRepository.checkDuplicateUser(username)
+    }
+
+    async getUser(userId: string): Promise<IUser | null> {
+        return this.userRepository.findUserById(userId)
+    }
     
 }
 
