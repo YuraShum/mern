@@ -18,7 +18,7 @@ export class NoteService implements INoteService {
 
         if (notes?.length) {
             const notesWithUser = await Promise.all(notes.map(async (note) => {
-                const user = await userService.getUser(note.user)
+                const user = await this.userService.getUser(note.user)
                 //!! коли зроблю централізований обробник ватро додати обробку помилок
                 return { ...note, username: user?.username }
             }))
