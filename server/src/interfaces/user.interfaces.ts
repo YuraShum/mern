@@ -45,7 +45,7 @@ export interface IUserService {
     updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null>;
     deleteUser(userId: string): Promise<void>;
     checkDuplicateUser(username: string): Promise<IUser | null>;
-    getUser(userId: string): Promise<IUser | null>;
+    getUser(userId: string | mongoose.Types.ObjectId): Promise<IUser | null>;
 
 }
 
@@ -56,5 +56,5 @@ export interface IUserRepository {
     updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null>;
     deleteUser(userId: string): Promise<void>;
     checkDuplicateUser(username: string): Promise<IUser | null>;
-    findUserById(userId: string): Promise<IUser | null>;
+    findUserById(userId: string | mongoose.Types.ObjectId): Promise<IUser | null>;
 }

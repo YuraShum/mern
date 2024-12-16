@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IUser, IUserRepository, IUserService } from "../interfaces";
 import { userRepository } from "../repository";
 
@@ -28,7 +29,7 @@ export class UserService implements IUserService {
         return this.userRepository.checkDuplicateUser(username)
     }
 
-    async getUser(userId: string): Promise<IUser | null> {
+    async getUser(userId: string | mongoose.Types.ObjectId): Promise<IUser | null> {
         return this.userRepository.findUserById(userId)
     }
     
