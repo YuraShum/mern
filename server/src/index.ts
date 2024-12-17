@@ -6,14 +6,17 @@ import mongoose from 'mongoose';
 
 import { config, corsOptions } from './config';
 import { apiRoutes } from './routes';
-import { errorHandler, logger } from './middleware';
+import { ErrorHandler } from './errors';
 import { connectDB } from './config';
-import { logEvents } from './middleware';
+import { logEvents, errorMiddleware } from './middleware';
 import { LOGGER_MONOGO_ERROR_FILE_NAME } from './constants';
+import Logger from './libs/winston/logger';
 
 //!! Поправити імпорти у файлах
 
 const app: Application = express();
+
+const errorHandler = new ErrorHandler(Logger);
 
 const { port } = config;
 // Підяключення до бази даних
@@ -25,10 +28,9 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-app.use(logger);
-
 app.use('/', express.static(path.join(__dirname, '../public')));
 app.use('/api', apiRoutes);
+app.use(errorMiddleware);
 
 app.all('*', (req, res) => {
     res.status(404);
@@ -41,7 +43,6 @@ app.all('*', (req, res) => {
     }
 });
 
-app.use(errorHandler);
 
 mongoose.connection.once('open', () => {
     console.log('✅ MongoDB connected successfully');
@@ -57,3 +58,13 @@ mongoose.connection.on('error', err => {
         LOGGER_MONOGO_ERROR_FILE_NAME,
     );
 });
+
+process.on('uncaughtException', async (error: Error) => {
+    await errorHandler.handleError(error);
+    if (!errorHandler.isTrustedError(error)) process.exit(1);
+});
+
+process.on('unhandledRejection', (reason: Error) => {
+    throw reason;
+});
+
