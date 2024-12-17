@@ -1,6 +1,7 @@
-import { NextFunction, Request, Response } from "express";
-import mongoose from "mongoose";
-import { GetAllUsersResponse, UserResponse } from "../types";
+import { NextFunction, Request, Response } from 'express';
+import mongoose from 'mongoose';
+
+import { GetAllUsersResponse, UserResponse } from '../types';
 
 //!! Перевірити чи вказано валідні ролі
 export interface IUser extends Document {
@@ -46,7 +47,6 @@ export interface IUserService {
     deleteUser(userId: string): Promise<void>;
     checkDuplicateUser(username: string): Promise<IUser | null>;
     getUser(userId: string | mongoose.Types.ObjectId): Promise<IUser | null>;
-
 }
 
 //!! Змінити в подальшому партіал на більш строжий вибір формату передачі даних для створення користувача
@@ -56,5 +56,7 @@ export interface IUserRepository {
     updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null>;
     deleteUser(userId: string): Promise<void>;
     checkDuplicateUser(username: string): Promise<IUser | null>;
-    findUserById(userId: string | mongoose.Types.ObjectId): Promise<IUser | null>;
+    findUserById(
+        userId: string | mongoose.Types.ObjectId,
+    ): Promise<IUser | null>;
 }

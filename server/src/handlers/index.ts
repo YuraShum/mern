@@ -1,1 +1,1 @@
-export * from './success.handler'
+export * from './success.handler';

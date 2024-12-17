@@ -1,8 +1,9 @@
 import mongoose, { Schema, Model } from 'mongoose';
-//!! Спробувати пофіксити
-const AutoIncrement = require('mongoose-sequence')(mongoose)
+
 import { INote } from '../interfaces';
 
+//!! Спробувати пофіксити
+const AutoIncrement = require('mongoose-sequence')(mongoose); // eslint-disable-line
 
 const noteSchema: Schema = new Schema(
     {
@@ -26,9 +27,8 @@ const noteSchema: Schema = new Schema(
     },
     {
         timestamps: true,
-    }
+    },
 );
-
 
 noteSchema.plugin(AutoIncrement, {
     inc_field: 'ticket',
@@ -36,7 +36,6 @@ noteSchema.plugin(AutoIncrement, {
     start_seq: 500,
 });
 
-
 const noteModel: Model<INote> = mongoose.model<INote>('Note', noteSchema);
 
-export {noteModel};
+export { noteModel };

@@ -1,28 +1,29 @@
-import mongoose, { Model } from "mongoose";
-import { IUser } from "../interfaces";
+import mongoose, { Model } from 'mongoose';
+
+import { IUser } from '../interfaces';
 
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true
+        required: true,
     },
     password: {
         type: String,
-        required: true
+        required: true,
     },
     roles: [
         {
             type: String,
-            default: "Employee"
+            default: 'Employee',
         },
     ],
-    active:{
+    active: {
         type: Boolean,
-        default: true
+        default: true,
     },
-})
+});
 
 //!! перевірити чи правильно створений інтерфейс для моделі
-const userModel: Model<IUser> = mongoose.model<IUser>("User", userSchema);
+const userModel: Model<IUser> = mongoose.model<IUser>('User', userSchema);
 
-export { userModel }
+export { userModel };

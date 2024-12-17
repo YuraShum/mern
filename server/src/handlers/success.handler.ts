@@ -4,7 +4,7 @@ import BaseHandler from './base.handler';
 
 class SuccessHandler extends BaseHandler {
     static ok(res: Response, data: unknown): Response {
-        return this.responseConstructor(res, 200, data)
+        return this.responseConstructor(res, 200, data);
     }
     static created(response: Response, data: unknown): Response {
         return this.responseConstructor(response, 201, data);
@@ -14,4 +14,4 @@ class SuccessHandler extends BaseHandler {
     }
 }
 
-export {SuccessHandler}
+export { SuccessHandler };

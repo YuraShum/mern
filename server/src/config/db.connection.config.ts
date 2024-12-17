@@ -1,13 +1,14 @@
-import mongoose from "mongoose";
-import { config } from "./config";
+import mongoose from 'mongoose';
 
-const {databaseUri} = config
+import { config } from './config';
+
+const { databaseUri } = config;
 const connectDB = async () => {
     try {
-        await mongoose.connect(databaseUri)
+        await mongoose.connect(databaseUri);
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
+};
 
-export {connectDB}
+export { connectDB };
