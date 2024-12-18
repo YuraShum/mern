@@ -1,15 +1,25 @@
 import express from 'express';
 
 import { noteController } from '../controllers';
+import { validateCreateNoteBody, validateDeleteNoteBody, validateUpdateNoteBody, validator } from '../validators';
 
 const router = express.Router();
 
 router.get('/', noteController.getAllNotes);
 
-router.post('/', noteController.createNewNote);
+router.post('/', 
+    ...validateCreateNoteBody,
+    validator,
+    noteController.createNewNote);
 
-router.patch('/', noteController.updateNote);
+router.patch('/', 
+    ...validateUpdateNoteBody,
+    validator,
+    noteController.updateNote);
 
-router.delete('/', noteController.deleteNote);
+router.delete('/', 
+    ...validateDeleteNoteBody,
+    validator,
+    noteController.deleteNote);
 
 export default router;
