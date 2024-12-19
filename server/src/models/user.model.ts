@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-//!! перевірити чи правильно створений інтерфейс для моделі
 const userModel: Model<IUser> = mongoose.model<IUser>('User', userSchema);
 
 export { userModel };

@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 
-import { GetAllUsersResponse, UserResponse } from '../types';
+import { GetAllUsersResponse, UserCreateFields, UserResponse } from '../types';
 
-//!! Перевірити чи вказано валідні ролі
 export interface IUser extends Document {
     _id: mongoose.Types.ObjectId;
     username: string;
@@ -42,7 +41,7 @@ export interface IUserController {
 
 export interface IUserService {
     getAllUsers(): Promise<IUser[] | null>;
-    createNewUser(userData: Partial<IUser>): Promise<IUser | null>;
+    createNewUser(userData: UserCreateFields): Promise<IUser | null>;
     updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null>;
     deleteUser(userId: string): Promise<void>;
     checkDuplicateUser(username: string): Promise<IUser | null>;
@@ -52,7 +51,7 @@ export interface IUserService {
 //!! Змінити в подальшому партіал на більш строжий вибір формату передачі даних для створення користувача
 export interface IUserRepository {
     getAll(): Promise<IUser[] | null>;
-    createNewUser(userData: Partial<IUser>): Promise<IUser | null>;
+    createNewUser(userData: UserCreateFields): Promise<IUser | null>;
     updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null>;
     deleteUser(userId: string): Promise<void>;
     checkDuplicateUser(username: string): Promise<IUser | null>;

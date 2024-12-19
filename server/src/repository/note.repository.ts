@@ -6,7 +6,6 @@ export class NoteRepository implements INoteRepository {
     async getAll(): Promise<INote[] | null> {
         return noteModel.find().exec();
     }
-    //!! Перевірити коректність роботи
     async getAllUserNotes(userId: string): Promise<INote[] | null> {
         return noteModel.find({ user: userId }).exec();
     }

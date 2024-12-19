@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 
-//!! Виправити у відображенні url бази даних що url =""
 dotenv.config();
 export const config = {
     port: process.env.PORT || 3500,

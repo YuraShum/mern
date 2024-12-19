@@ -12,19 +12,17 @@ import { logEvents, errorMiddleware } from './middleware';
 import { LOGGER_MONOGO_ERROR_FILE_NAME } from './constants';
 import Logger from './libs/winston/logger';
 
-//!! Поправити імпорти у файлах
 
 const app: Application = express();
 
 const errorHandler = new ErrorHandler(Logger);
 
 const { port } = config;
-// Підяключення до бази даних
+
 connectDB();
 
 app.use(express.json());
 
-//!! Перевірити працездатність обмежень корсу
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
