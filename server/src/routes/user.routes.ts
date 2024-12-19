@@ -1,25 +1,36 @@
 import express from 'express';
 
 import { userController } from '../controllers';
-import { validateCreateUserBody, validateDeleteUserBody, validateUpdateUserBody, validator } from '../validators';
+import {
+    validateCreateUserBody,
+    validateDeleteUserBody,
+    validateUpdateUserBody,
+    validator,
+} from '../validators';
 
 const router = express.Router();
 
 router.get('/', userController.getAllUsers);
 
-router.post('/',
+router.post(
+    '/',
     ...validateCreateUserBody,
     validator,
-    userController.createNewUser);
+    userController.createNewUser,
+);
 
-router.patch('/',
+router.patch(
+    '/',
     ...validateUpdateUserBody,
     validator,
-    userController.updateUser);
+    userController.updateUser,
+);
 
-router.delete('/',
+router.delete(
+    '/',
     ...validateDeleteUserBody,
     validator,
-    userController.deleteUser);
+    userController.deleteUser,
+);
 
 export default router;

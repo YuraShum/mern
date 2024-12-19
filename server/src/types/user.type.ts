@@ -10,4 +10,7 @@ export type DeleteUserResponse = Response<void | IErrorResponse>;
 
 export type UserCreateFields = Pick<IUser, 'username' | 'password' | 'roles'>;
 
-export type UserUpdateFields = Pick<IUser, 'username' | 'roles' | "active" | 'password'>;
+export type UserUpdateFields = Pick<
+    IUser,
+    'username' | 'roles' | 'active' | 'password'
+>;

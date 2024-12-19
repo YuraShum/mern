@@ -12,7 +12,6 @@ import { logEvents, errorMiddleware } from './middleware';
 import { LOGGER_MONOGO_ERROR_FILE_NAME } from './constants';
 import Logger from './libs/winston/logger';
 
-
 const app: Application = express();
 
 const errorHandler = new ErrorHandler(Logger);
@@ -41,7 +40,6 @@ app.all('*', (req, res) => {
     }
 });
 
-
 mongoose.connection.once('open', () => {
     console.log('✅ MongoDB connected successfully');
     app.listen(port, () => {
@@ -65,4 +63,3 @@ process.on('uncaughtException', async (error: Error) => {
 process.on('unhandledRejection', (reason: Error) => {
     throw reason;
 });
-

@@ -1,4 +1,5 @@
 import { Request, NextFunction } from 'express';
+import status from 'http-status';
 
 import { IUserController, IUserService } from '../interfaces';
 import { userService } from '../services';
@@ -9,11 +10,21 @@ import {
     UserResponse,
 } from '../types';
 import { ApiError } from '../errors';
-import { CREATE_NEW_USER_MESSAGE, CREATE_NEW_USER_MESSAGE_ERROR, CREATE_NEW_USER_METHOD, DELETE_USER_MESSAGE_ERROR, DELETE_USER_METHOD, GET_ALL_USERS_MESSAGE, GET_ALL_USERS_METHOD, INTERNAL_SERVER_ERROR, UPDATE_USER_MESSAGE_ERROR, UPDATE_USER_METHOD } from '../constants';
-import status from 'http-status';
+import {
+    CREATE_NEW_USER_MESSAGE,
+    CREATE_NEW_USER_MESSAGE_ERROR,
+    CREATE_NEW_USER_METHOD,
+    DELETE_USER_MESSAGE_ERROR,
+    DELETE_USER_METHOD,
+    GET_ALL_USERS_MESSAGE,
+    GET_ALL_USERS_METHOD,
+    INTERNAL_SERVER_ERROR,
+    UPDATE_USER_MESSAGE_ERROR,
+    UPDATE_USER_METHOD,
+} from '../constants';
 
 class UserController implements IUserController {
-    constructor(private userService: IUserService) { }
+    constructor(private userService: IUserService) {}
 
     getAllUsers = async (
         _req: Request,
@@ -31,9 +42,9 @@ class UserController implements IUserController {
                 INTERNAL_SERVER_ERROR,
                 GET_ALL_USERS_MESSAGE,
                 GET_ALL_USERS_METHOD,
-                status.INTERNAL_SERVER_ERROR
-            )
-            next(err)
+                status.INTERNAL_SERVER_ERROR,
+            );
+            next(err);
         }
     };
 
@@ -57,9 +68,9 @@ class UserController implements IUserController {
                     CREATE_NEW_USER_MESSAGE,
                     CREATE_NEW_USER_METHOD,
                     status.BAD_REQUEST,
-                    true
-                )
-                return next(error)
+                    true,
+                );
+                return next(error);
             }
             SuccessHandler.created(res, { data: newUser });
         } catch (error) {
@@ -70,9 +81,9 @@ class UserController implements IUserController {
                 INTERNAL_SERVER_ERROR,
                 CREATE_NEW_USER_MESSAGE_ERROR,
                 CREATE_NEW_USER_METHOD,
-                status.INTERNAL_SERVER_ERROR
-            )
-            next(err)
+                status.INTERNAL_SERVER_ERROR,
+            );
+            next(err);
         }
     };
 
@@ -83,15 +94,13 @@ class UserController implements IUserController {
     ): Promise<void> => {
         try {
             const { userId, username, roles, active, password } = req.body;
-            
-            const updatedUser = await this.userService.updateUser(
-                userId,
-                {
-                    username,
-                    roles,
-                    active,
-                    password
-                });
+
+            const updatedUser = await this.userService.updateUser(userId, {
+                username,
+                roles,
+                active,
+                password,
+            });
             SuccessHandler.ok(res, { data: updatedUser });
         } catch (error) {
             if (error instanceof ApiError) {
@@ -101,9 +110,9 @@ class UserController implements IUserController {
                 INTERNAL_SERVER_ERROR,
                 UPDATE_USER_MESSAGE_ERROR,
                 UPDATE_USER_METHOD,
-                status.INTERNAL_SERVER_ERROR
-            )
-            next(err)
+                status.INTERNAL_SERVER_ERROR,
+            );
+            next(err);
         }
     };
 
@@ -125,9 +134,9 @@ class UserController implements IUserController {
                 INTERNAL_SERVER_ERROR,
                 DELETE_USER_MESSAGE_ERROR,
                 DELETE_USER_METHOD,
-                status.INTERNAL_SERVER_ERROR
-            )
-            next(err)
+                status.INTERNAL_SERVER_ERROR,
+            );
+            next(err);
         }
     };
 }

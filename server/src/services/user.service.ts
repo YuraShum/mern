@@ -2,18 +2,29 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import status from 'http-status';
 
-import { INoteRepository, IUser, IUserRepository, IUserService } from '../interfaces';
+import {
+    INoteRepository,
+    IUser,
+    IUserRepository,
+    IUserService,
+} from '../interfaces';
 import { noteRepository, userRepository } from '../repository';
 import { UserCreateFields } from '../types';
 import { ApiError } from '../errors';
-import { DUPLICATE_USERNAME_MESSAGE, DUPLICATE_USERNAME_METHOD, SERVICE_DELETE_USER_METHOD, SERVICE_UPDATE_USER_METHOD, USER_HAS_ASSIGNED_NOTES_MESSAGE, USER_NOT_FOUND_MESSAGE } from '../constants';
-
+import {
+    DUPLICATE_USERNAME_MESSAGE,
+    DUPLICATE_USERNAME_METHOD,
+    SERVICE_DELETE_USER_METHOD,
+    SERVICE_UPDATE_USER_METHOD,
+    USER_HAS_ASSIGNED_NOTES_MESSAGE,
+    USER_NOT_FOUND_MESSAGE,
+} from '../constants';
 
 export class UserService implements IUserService {
     constructor(
         private userRepository: IUserRepository,
-        private noteRepository: INoteRepository
-    ) { }
+        private noteRepository: INoteRepository,
+    ) {}
 
     async getAllUsers(): Promise<IUser[] | null> {
         return this.userRepository.getAll();
@@ -22,14 +33,15 @@ export class UserService implements IUserService {
     async createNewUser(userData: UserCreateFields): Promise<IUser | null> {
         const { username, password, roles } = userData;
 
-        const duplicate = await this.userRepository.checkDuplicateUser(username);
+        const duplicate =
+            await this.userRepository.checkDuplicateUser(username);
         if (duplicate) {
             throw new ApiError(
                 DUPLICATE_USERNAME_MESSAGE,
                 DUPLICATE_USERNAME_MESSAGE,
                 DUPLICATE_USERNAME_METHOD,
                 status.BAD_REQUEST,
-                true
+                true,
             );
         }
 
@@ -42,12 +54,11 @@ export class UserService implements IUserService {
         });
     }
 
-    async updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null> {
-        const {
-            username,
-            password
-        } = userData
-
+    async updateUser(
+        userId: string,
+        userData: Partial<IUser>,
+    ): Promise<IUser | null> {
+        const { username, password } = userData;
 
         const user = await this.userRepository.findUserById(userId);
         if (!user) {
@@ -56,18 +67,20 @@ export class UserService implements IUserService {
                 USER_NOT_FOUND_MESSAGE,
                 SERVICE_UPDATE_USER_METHOD,
                 status.NOT_FOUND,
-                true
+                true,
             );
         }
 
-        const duplicate = await this.userRepository.checkDuplicateUser(username as string);
+        const duplicate = await this.userRepository.checkDuplicateUser(
+            username as string,
+        );
         if (duplicate && duplicate._id.toString() !== userId) {
             throw new ApiError(
                 DUPLICATE_USERNAME_MESSAGE,
                 DUPLICATE_USERNAME_MESSAGE,
                 SERVICE_UPDATE_USER_METHOD,
                 status.BAD_REQUEST,
-                true
+                true,
             );
         }
 
@@ -79,14 +92,14 @@ export class UserService implements IUserService {
     }
 
     async deleteUser(userId: string): Promise<void> {
-        const note = await this.noteRepository.getAllUserNotes(userId)
+        const note = await this.noteRepository.getAllUserNotes(userId);
         if (note && note.length < 1) {
             throw new ApiError(
                 USER_HAS_ASSIGNED_NOTES_MESSAGE,
                 USER_HAS_ASSIGNED_NOTES_MESSAGE,
                 SERVICE_DELETE_USER_METHOD,
                 status.BAD_REQUEST,
-                true
+                true,
             );
         }
 
@@ -97,7 +110,7 @@ export class UserService implements IUserService {
                 USER_NOT_FOUND_MESSAGE,
                 SERVICE_DELETE_USER_METHOD,
                 status.NOT_FOUND,
-                true
+                true,
             );
         }
 

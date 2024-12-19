@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+
 import { ApiError, ErrorHandler } from '../errors';
 import Logger from '../libs/winston/logger';
 import { logEvents } from './logger.middleware';
@@ -10,7 +11,7 @@ export async function errorMiddleware(
     err: ApiError,
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ) {
     if (!errorHandler.isTrustedError(err)) {
         next(err);
@@ -21,7 +22,7 @@ export async function errorMiddleware(
 
     logEvents(
         `${err.name}: ${err.message}\t${req.method}\t${req.url}\t${req.headers.origin}`,
-        LOGGER_ERROR_FILE_NAME
+        LOGGER_ERROR_FILE_NAME,
     );
 
     const status = err.httpCode || 500;

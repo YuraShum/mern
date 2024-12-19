@@ -1,5 +1,16 @@
 import status from 'http-status';
-import { DUPLICATE_NOTE_TITLE, DUPLICATE_NOTE_TITLE_METHOD, NOTE_DOES_NOT_EXIST_MESSAGE, NOTE_NOT_FOUND_MESSAGE, SERVICE_DELETE_NOTE_METHOD, SERVICE_GET_ALL_NOTES_METHOD, SERVICE_GET_NOTE_METHOD, SERVICE_UPDATE_NOTE, USER_NOT_FOUND_MESSAGE } from '../constants';
+
+import {
+    DUPLICATE_NOTE_TITLE,
+    DUPLICATE_NOTE_TITLE_METHOD,
+    NOTE_DOES_NOT_EXIST_MESSAGE,
+    NOTE_NOT_FOUND_MESSAGE,
+    SERVICE_DELETE_NOTE_METHOD,
+    SERVICE_GET_ALL_NOTES_METHOD,
+    SERVICE_GET_NOTE_METHOD,
+    SERVICE_UPDATE_NOTE,
+    USER_NOT_FOUND_MESSAGE,
+} from '../constants';
 import { ApiError } from '../errors';
 import { INote, INoteService } from '../interfaces';
 import { noteRepository, NoteRepository } from '../repository';
@@ -10,12 +21,9 @@ export class NoteService implements INoteService {
     constructor(
         private noteRepository: NoteRepository,
         private userService: UserService,
-    ) { }
+    ) {}
 
-    async getAllNotes(): Promise<
-        (INote & { username: string })[] | null
-    > { // eslint-disable-line
-
+    async getAllNotes(): Promise<(INote & { username: string })[] | null> {
         const notes = await this.noteRepository.getAll();
 
         if (notes?.length) {
@@ -28,7 +36,7 @@ export class NoteService implements INoteService {
                             USER_NOT_FOUND_MESSAGE,
                             SERVICE_GET_ALL_NOTES_METHOD,
                             status.NOT_FOUND,
-                            true
+                            true,
                         );
                     }
 
@@ -53,7 +61,7 @@ export class NoteService implements INoteService {
                 NOTE_DOES_NOT_EXIST_MESSAGE,
                 SERVICE_GET_NOTE_METHOD,
                 status.NOT_FOUND,
-                true
+                true,
             );
         }
         return note;
@@ -73,9 +81,8 @@ export class NoteService implements INoteService {
                 DUPLICATE_NOTE_TITLE,
                 DUPLICATE_NOTE_TITLE_METHOD,
                 status.BAD_REQUEST,
-                true
-            )
-
+                true,
+            );
         }
 
         return this.noteRepository.createNewNote(noteBody);
@@ -94,7 +101,7 @@ export class NoteService implements INoteService {
                 NOTE_NOT_FOUND_MESSAGE,
                 SERVICE_UPDATE_NOTE,
                 status.NOT_FOUND,
-                true
+                true,
             );
         }
 
@@ -105,11 +112,16 @@ export class NoteService implements INoteService {
                 DUPLICATE_NOTE_TITLE,
                 SERVICE_UPDATE_NOTE,
                 status.BAD_REQUEST,
-                true
+                true,
             );
         }
 
-        return this.noteRepository.updateNote(noteId, { user, title, text, completed });
+        return this.noteRepository.updateNote(noteId, {
+            user,
+            title,
+            text,
+            completed,
+        });
     }
 
     async deleteNote(noteId: string): Promise<void> {
@@ -120,7 +132,7 @@ export class NoteService implements INoteService {
                 NOTE_NOT_FOUND_MESSAGE,
                 SERVICE_DELETE_NOTE_METHOD,
                 status.NOT_FOUND,
-                true
+                true,
             );
         }
 

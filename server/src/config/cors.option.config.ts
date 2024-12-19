@@ -1,4 +1,5 @@
 import status from 'http-status';
+
 import { ApiError } from '../errors';
 import { config } from './config';
 import { CORS_METHOD, CORS_NOT_ALLOWED } from '../constants';
@@ -19,7 +20,7 @@ const corsOptions = {
                 CORS_NOT_ALLOWED,
                 CORS_METHOD,
                 status.FORBIDDEN,
-                true
+                true,
             );
             callback(error, false);
         }

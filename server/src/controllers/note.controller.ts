@@ -1,15 +1,25 @@
 import { Request, NextFunction } from 'express';
+import status from 'http-status';
 
 import { INoteConroller } from '../interfaces';
 import { noteService, NoteService } from '../services';
 import { DeleteNoteResponse, GetAllNoteResponse, NoteResponse } from '../types';
 import { SuccessHandler } from '../handlers';
 import { ApiError } from '../errors';
-import { CREATE_NEW_NOTE_MESSAGE, CREATE_NEW_NOTE_METHOD, DELETE_NOTE_MESSAGE, DELETE_NOTE_METHOD, GET_ALL_NOTES_MESSAGE, GET_ALL_NOTES_METHOD, INTERNAL_SERVER_ERROR, UPDATE_NOTE_MESSAGE, UPDATE_NOTE_METHOD } from '../constants';
-import status from 'http-status';
+import {
+    CREATE_NEW_NOTE_MESSAGE,
+    CREATE_NEW_NOTE_METHOD,
+    DELETE_NOTE_MESSAGE,
+    DELETE_NOTE_METHOD,
+    GET_ALL_NOTES_MESSAGE,
+    GET_ALL_NOTES_METHOD,
+    INTERNAL_SERVER_ERROR,
+    UPDATE_NOTE_MESSAGE,
+    UPDATE_NOTE_METHOD,
+} from '../constants';
 
 class NoteController implements INoteConroller {
-    constructor(private noteService: NoteService) { }
+    constructor(private noteService: NoteService) {}
 
     getAllNotes = async (
         _req: Request,
@@ -27,9 +37,9 @@ class NoteController implements INoteConroller {
                 INTERNAL_SERVER_ERROR,
                 GET_ALL_NOTES_MESSAGE,
                 GET_ALL_NOTES_METHOD,
-                status.INTERNAL_SERVER_ERROR
-            )
-            next(err)
+                status.INTERNAL_SERVER_ERROR,
+            );
+            next(err);
         }
     };
 
@@ -49,9 +59,9 @@ class NoteController implements INoteConroller {
                 INTERNAL_SERVER_ERROR,
                 CREATE_NEW_NOTE_MESSAGE,
                 CREATE_NEW_NOTE_METHOD,
-                status.INTERNAL_SERVER_ERROR
-            )
-            next(err)
+                status.INTERNAL_SERVER_ERROR,
+            );
+            next(err);
         }
     };
 
@@ -78,9 +88,9 @@ class NoteController implements INoteConroller {
                 INTERNAL_SERVER_ERROR,
                 UPDATE_NOTE_MESSAGE,
                 UPDATE_NOTE_METHOD,
-                status.INTERNAL_SERVER_ERROR
-            )
-            next(err)
+                status.INTERNAL_SERVER_ERROR,
+            );
+            next(err);
         }
     };
 
@@ -102,9 +112,9 @@ class NoteController implements INoteConroller {
                 INTERNAL_SERVER_ERROR,
                 DELETE_NOTE_MESSAGE,
                 DELETE_NOTE_METHOD,
-                status.INTERNAL_SERVER_ERROR
-            )
-            next(err)
+                status.INTERNAL_SERVER_ERROR,
+            );
+            next(err);
         }
     };
 }
