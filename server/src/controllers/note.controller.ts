@@ -4,9 +4,12 @@ import { INoteConroller } from '../interfaces';
 import { noteService, NoteService } from '../services';
 import { DeleteNoteResponse, GetAllNoteResponse, NoteResponse } from '../types';
 import { SuccessHandler } from '../handlers';
+import { ApiError } from '../errors';
+import { CREATE_NEW_NOTE_MESSAGE, CREATE_NEW_NOTE_METHOD, DELETE_NOTE_MESSAGE, DELETE_NOTE_METHOD, GET_ALL_NOTES_MESSAGE, GET_ALL_NOTES_METHOD, INTERNAL_SERVER_ERROR, UPDATE_NOTE_MESSAGE, UPDATE_NOTE_METHOD } from '../constants';
+import status from 'http-status';
 
 class NoteController implements INoteConroller {
-    constructor(private noteService: NoteService) {}
+    constructor(private noteService: NoteService) { }
 
     getAllNotes = async (
         _req: Request,
@@ -17,7 +20,16 @@ class NoteController implements INoteConroller {
             const notes = await this.noteService.getAllNotes();
             SuccessHandler.ok(res, { data: notes });
         } catch (error) {
-            next(error);
+            if (error instanceof ApiError) {
+                return next(error);
+            }
+            const err = new ApiError(
+                INTERNAL_SERVER_ERROR,
+                GET_ALL_NOTES_MESSAGE,
+                GET_ALL_NOTES_METHOD,
+                status.INTERNAL_SERVER_ERROR
+            )
+            next(err)
         }
     };
 
@@ -27,34 +39,19 @@ class NoteController implements INoteConroller {
         next: NextFunction,
     ): Promise<void> => {
         try {
-            const { user, title, text } = req.body;
-
-            if (!user || !title || !text) {
-                res.status(400).json({ message: 'All fields are required' });
-                return;
-            }
-
-            const duplicate = await this.noteService.checkDuplicateNote(title);
-
-            if (duplicate) {
-                res.status(409).json({ message: 'Duplicate note title' });
-                return;
-            }
-
-            const newNote = await this.noteService.createNote({
-                user,
-                title,
-                text,
-            });
-
-            if (!newNote) {
-                res.status(400).json({ message: 'Invalid note data received' });
-                return;
-            } else {
-                SuccessHandler.created(res, { data: newNote });
-            }
+            const newNote = await this.noteService.createNote(req.body);
+            SuccessHandler.created(res, { data: newNote });
         } catch (error) {
-            next(error);
+            if (error instanceof ApiError) {
+                return next(error);
+            }
+            const err = new ApiError(
+                INTERNAL_SERVER_ERROR,
+                CREATE_NEW_NOTE_MESSAGE,
+                CREATE_NEW_NOTE_METHOD,
+                status.INTERNAL_SERVER_ERROR
+            )
+            next(err)
         }
     };
 
@@ -66,44 +63,24 @@ class NoteController implements INoteConroller {
         try {
             const { noteId, user, title, text, completed } = req.body;
 
-            if (
-                !noteId ||
-                !user ||
-                !title ||
-                !text ||
-                typeof completed != 'boolean'
-            ) {
-                res.status(400).json({ message: 'All fields are required' });
-                return;
-            }
-
-            const note = await this.noteService.getNote(noteId);
-
-            if (!note) {
-                res.status(400).json({ message: 'Note not found' });
-                return;
-            }
-
-            const duplicate = await this.noteService.checkDuplicateNote(title);
-
-            if (duplicate && duplicate?._id.toString() !== noteId) {
-                res.status(409).json({ message: 'Duplicate note title' });
-                return;
-            }
-
             const updatedNote = await this.noteService.updateNote(noteId, {
                 user,
                 title,
                 text,
                 completed,
             });
-            if (!updatedNote) {
-                res.status(400).json({ message: 'Failed to update note' });
-                return;
-            }
             SuccessHandler.ok(res, { data: updatedNote });
         } catch (error) {
-            next(error);
+            if (error instanceof ApiError) {
+                return next(error);
+            }
+            const err = new ApiError(
+                INTERNAL_SERVER_ERROR,
+                UPDATE_NOTE_MESSAGE,
+                UPDATE_NOTE_METHOD,
+                status.INTERNAL_SERVER_ERROR
+            )
+            next(err)
         }
     };
 
@@ -114,21 +91,20 @@ class NoteController implements INoteConroller {
     ): Promise<void> => {
         try {
             const { noteId } = req.body;
-            if (!noteId) {
-                res.status(400).json({ message: 'Note ID required' });
-                return;
-            }
-
-            const note = await this.noteService.getNote(noteId);
-            if (!note) {
-                res.status(400).json({ message: 'Note not found' });
-                return;
-            }
 
             await this.noteService.deleteNote(noteId);
             SuccessHandler.noContent(res);
         } catch (error) {
-            next(error);
+            if (error instanceof ApiError) {
+                return next(error);
+            }
+            const err = new ApiError(
+                INTERNAL_SERVER_ERROR,
+                DELETE_NOTE_MESSAGE,
+                DELETE_NOTE_METHOD,
+                status.INTERNAL_SERVER_ERROR
+            )
+            next(err)
         }
     };
 }
