@@ -1,4 +1,7 @@
+import status from 'http-status';
+import { ApiError } from '../errors';
 import { config } from './config';
+import { CORS_METHOD, CORS_NOT_ALLOWED } from '../constants';
 
 const { host } = config;
 
@@ -11,7 +14,14 @@ const corsOptions = {
         if (allowedOrigins.indexOf(origin as string) !== -1 || !origin) {
             callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'), false);
+            const error = new ApiError(
+                CORS_NOT_ALLOWED,
+                CORS_NOT_ALLOWED,
+                CORS_METHOD,
+                status.FORBIDDEN,
+                true
+            );
+            callback(error, false);
         }
     },
     credentials: true,
